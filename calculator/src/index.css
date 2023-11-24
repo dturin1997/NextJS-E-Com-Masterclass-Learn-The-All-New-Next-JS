@@ -10,7 +10,7 @@
   height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .border {
@@ -60,9 +60,11 @@
   transform: scale(0.98);
   transition: cubic-bezier(0.075, 0.82, 0 165, 1);
 }
+
 .calc-btn:not(:last-child) {
   margin-right: 10px;
 }
+
 .flex-col {
   display: flex;
   flex-direction: column;
