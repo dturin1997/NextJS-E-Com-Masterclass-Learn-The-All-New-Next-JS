@@ -6,6 +6,7 @@ import { Button, Input } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { filterFormikErrors } from "@/app/utils/formikHelpers";
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -32,19 +33,56 @@ export default function SignUp() {
       console.log(values);
     },
   });
-  const formErrors: string[] = [];
-  console.log(errors);
+  /*
+  const touchedKeys = Object.entries(touched).map(([key, value]) => {
+    if (value) return key;
+  });
+  //console.log(touchedKeys);
+  const finalErrors: string[] = [];
+  Object.entries(errors).forEach(([key, value]) => {
+    if (touchedKeys.includes(key) && value) finalErrors.push(value);
+  });
+*/
+  const formErrors: string[] = filterFormikErrors(errors, touched, values);
+  //const formErrors: string[] = finalErrors;
+  /*
+  const formErrors: string[] = Object.entries(errors).map(([key, value]) => {
+    return value;
+  });
+  */
+  /*
+  console.log(
+    Object.entries(errors).map(([key, value]) => {
+      return value;
+    })
+  );
+  */
+  //console.log(touched);
+
   const { email, name, password } = values;
 
   return (
     <AuthFormContainer title="Create New Account" onSubmit={handleSubmit}>
-      <Input name="name" label="Name" onChange={handleChange} value={name} />
-      <Input name="email" label="Email" onChange={handleChange} value={email} />
+      <Input
+        name="name"
+        label="Name"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        value={name}
+      />
+      <Input
+        name="email"
+        label="Email"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        value={email}
+      />
       <Input
         name="password"
         label="Password"
         type="password"
         onChange={handleChange}
+        onBlur={handleBlur}
         value={password}
       />
       <Button type="submit" className="w-full bg-blue-500 text-white">
