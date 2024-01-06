@@ -22,7 +22,10 @@
       "@/*": ["./*"],
       "@app/*": ["./app/*"],
       "@hooks/*": ["./app/hooks/*"],
-      "@components/*": ["./app/components/*"]
+      "@components/*": ["./app/components/*"],
+      "@lib/*": ["./app/lib/*"],
+      "@models/*": ["./app/models/*"],
+      "@types*": ["./app/types/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

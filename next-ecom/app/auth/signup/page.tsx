@@ -29,8 +29,9 @@ export default function SignUp() {
   } = useFormik({
     initialValues: { name: "", email: "", password: "" },
     validationSchema,
-    onSubmit: (values) => {
-      fetch("/api/users", {
+    onSubmit: async (values, action) => {
+      action.setSubmitting(true);
+      await fetch("/api/users", {
         method: "POST",
         body: JSON.stringify(values),
       }).then(async (res) => {
@@ -38,10 +39,11 @@ export default function SignUp() {
           const result = await res.json();
           console.log(result);
         }
+        action.setSubmitting(false);
       });
     },
   });
-  
+
   const formErrors: string[] = filterFormikErrors(errors, touched, values);
 
   const { email, name, password } = values;
@@ -70,7 +72,11 @@ export default function SignUp() {
         onBlur={handleBlur}
         value={password}
       />
-      <Button type="submit" className="w-full bg-blue-500 text-white">
+      <Button
+        disabled={isSubmitting}
+        type="submit"
+        className="w-full bg-blue-500 text-white"
+      >
         Sign up
       </Button>
       <div className="">
