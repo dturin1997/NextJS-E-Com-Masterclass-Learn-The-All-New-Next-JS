@@ -30,34 +30,19 @@ export default function SignUp() {
     initialValues: { name: "", email: "", password: "" },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      fetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify(values),
+      }).then(async (res) => {
+        if (res.ok) {
+          const result = await res.json();
+          console.log(result);
+        }
+      });
     },
   });
-  /*
-  const touchedKeys = Object.entries(touched).map(([key, value]) => {
-    if (value) return key;
-  });
-  //console.log(touchedKeys);
-  const finalErrors: string[] = [];
-  Object.entries(errors).forEach(([key, value]) => {
-    if (touchedKeys.includes(key) && value) finalErrors.push(value);
-  });
-*/
+  
   const formErrors: string[] = filterFormikErrors(errors, touched, values);
-  //const formErrors: string[] = finalErrors;
-  /*
-  const formErrors: string[] = Object.entries(errors).map(([key, value]) => {
-    return value;
-  });
-  */
-  /*
-  console.log(
-    Object.entries(errors).map(([key, value]) => {
-      return value;
-    })
-  );
-  */
-  //console.log(touched);
 
   const { email, name, password } = values;
 
