@@ -1,7 +1,8 @@
 "use client";
 
 import { notFound, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Props {
   searchParams: {
@@ -26,17 +27,17 @@ export default function Verify(props: Props) {
 
       if (res.ok) {
         //success
-        console.log(message);
-        router.replace("/");
+        toast.success(message);
       }
 
       if (!res.ok && error) {
-        console.log(error);
+        toast.error(error);
       }
+      router.replace("/");
     });
   }, []);
 
-  if (!token || !userId) return notFound;
+  if (!token || !userId) return notFound();
 
   return (
     <div className="text-3xl opacity-70 text-center p-5 animate-pulse">
