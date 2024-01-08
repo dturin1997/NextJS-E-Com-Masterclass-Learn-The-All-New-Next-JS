@@ -42,5 +42,5 @@ export const POST = async (req: Request) => {
   console.log(await newUser.comparePassword("12345678"));
   console.log(await newUser.comparePassword("1234567"));
 
-  return NextResponse.json(newUser);
+  return NextResponse.json({ message: "Please check your email!" });
 };
