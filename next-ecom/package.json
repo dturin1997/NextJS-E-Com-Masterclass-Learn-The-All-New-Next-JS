@@ -11,6 +11,8 @@
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.4",
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
     "formik": "^2.4.5",
     "mongoose": "^8.0.3",
     "next": "14.0.3",
