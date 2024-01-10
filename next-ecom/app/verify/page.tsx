@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -15,28 +15,35 @@ export default function Verify(props: Props) {
   const { token, userId } = props.searchParams;
   const router = useRouter();
 
+  /*---- Handling Double Render ----*/
+  let firstUseEffectExecution = true;
+
   //verify the token and userId
   useEffect(() => {
-    fetch("/api/users/verify", {
-      method: "POST",
-      body: JSON.stringify({ token, userId }),
-    }).then(async (res) => {
-      const apiRes = await res.json();
+    if (!firstUseEffectExecution) {
+      fetch("/api/users/verify", {
+        method: "POST",
+        body: JSON.stringify({ token, userId }),
+      }).then(async (res) => {
+        const apiRes = await res.json();
 
-      const { error, message } = apiRes as { message: string; error: string };
+        const { error, message } = apiRes as { message: string; error: string };
 
-      if (res.ok) {
-        //success
-        toast.success(message);
-      }
+        if (res.ok) {
+          //success
+          toast.success(message);
+        }
 
-      if (!res.ok && error) {
-        toast.error(error);
-      }
-      router.replace("/");
-    });
+        if (!res.ok && error) {
+          toast.error(error);
+        }
+        router.replace("/");
+      });
+    }
+    firstUseEffectExecution = false;
   }, []);
-
+  /*---- Handling Double Render ----*/
+  
   if (!token || !userId) return notFound();
 
   return (
