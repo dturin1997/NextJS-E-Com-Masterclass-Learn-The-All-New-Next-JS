@@ -9,6 +9,8 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import * as yup from "yup";
 import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -19,6 +21,8 @@ const validationSchema = yup.object().shape({
 });
 
 export default function SignIn() {
+  const router = useRouter();
+
   const {
     values,
     isSubmitting,
@@ -31,9 +35,19 @@ export default function SignIn() {
     initialValues: { email: "", password: "" },
     validationSchema,
     onSubmit: async (values, actions) => {
-      await signIn("credentials", {
+      const signInRes = await signIn("credentials", {
         ...values,
+        redirect: false,
       });
+      //console.log(signInRes);
+
+      if (signInRes?.error === "CredentialsSignin") {
+        toast.error("Email/Password mismatch!");
+      }
+
+      if (!signInRes?.error) {
+        router.refresh();
+      }
     },
   });
 
