@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { filterFormikErrors } from "@/app/utils/formikHelpers";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -24,7 +25,23 @@ export default function ForgetPassword() {
   } = useFormik({
     initialValues: { email: "" },
     validationSchema,
-    onSubmit: async (values, actions) => {},
+    onSubmit: async (values, actions) => {
+      actions.setSubmitting(true);
+      const res = await fetch("/api/users/forget-password", {
+        method: "POST",
+        body: JSON.stringify(values),
+      });
+
+      const { message, error } = await res.json();
+
+      if (res.ok) {
+        toast.success(message);
+      }
+      if (!res.ok && error) {
+        toast.error(error);
+      }
+      actions.setSubmitting(false);
+    },
   });
 
   const errorsToRender = filterFormikErrors(errors, touched, values);
