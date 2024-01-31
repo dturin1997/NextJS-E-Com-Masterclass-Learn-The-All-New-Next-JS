@@ -19,10 +19,27 @@ const authConfig: NextAuthConfig = {
         ).then(async (res) => await res.json());
 
         if (error) return null;
-        return { id: user.id };
+        return { id: user.id, ...user };
       },
     }),
   ],
+  callbacks: {
+    async jwt(params) {
+      //console.log("jwt ==> ", params);
+      if (params.user) {
+        params.token.user = params.user;
+      }
+      return params.token;
+    },
+    async session(params) {
+      //console.log("session ==> ", params);
+      const user = params.token.user;
+      if (user) {
+        params.session.user = { ...params.session.user, ...user };
+      }
+      return params.session;
+    },
+  },
 };
 
 export const {
