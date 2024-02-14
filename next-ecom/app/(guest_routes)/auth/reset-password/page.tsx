@@ -1,7 +1,7 @@
 import UpdatePassword from "@/app/components/UpdatePassword";
 import startDb from "@/app/lib/db";
 import PasswordResetTokenModel from "@/app/models/passwordResetTokenModel";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import React from "react";
 
 interface Props {
@@ -27,10 +27,10 @@ export default async function ResetPassword({ searchParams }: Props) {
   const { token, userId } = searchParams;
   //console.log(props);
 
-  if (!token || !userId) return notFound();
+  if (!token || !userId) return redirect("/404");
 
   const isValid = await fetchTokenValidation(token, userId);
-  if (!isValid) return notFound();
+  if (!isValid) return redirect("/404");
 
   return <UpdatePassword token={token} userId={userId} />;
 }

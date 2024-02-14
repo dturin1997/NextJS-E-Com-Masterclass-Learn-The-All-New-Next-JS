@@ -6,6 +6,8 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { filterFormikErrors } from "@/app/utils/formikHelpers";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const validationSchema = yup.object().shape({
   password1: yup
@@ -24,6 +26,7 @@ interface Props {
 }
 
 export default function UpdatePassword({ token, userId }: Props) {
+  const router = useRouter();
   const {
     values,
     isSubmitting,
@@ -35,7 +38,23 @@ export default function UpdatePassword({ token, userId }: Props) {
   } = useFormik({
     initialValues: { password1: "", password2: "" },
     validationSchema,
-    onSubmit: async (values, actions) => {},
+    onSubmit: async (values, actions) => {
+      const res = await fetch("/api/users/update-password", {
+        method: "POST",
+        body: JSON.stringify({ password: values.password1, token, userId }),
+      });
+
+      const { message, error } = await res.json();
+
+      if (res.ok) {
+        toast.success(message);
+        router.replace("/auth/signin");
+      }
+
+      if (!res.ok && error) {
+        toast.error(error);
+      }
+    },
   });
 
   const errorsToRender = filterFormikErrors(errors, touched, values);
